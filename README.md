@@ -5,6 +5,7 @@ This repository contains a small Python implementation of the Lambert conformal 
 ## Features
 - Computes the projection constants `n`, `F` (often called `K` in textbooks), and `ρ0` from two standard parallels, a latitude of origin, and a central meridian.
 - Projects geographic coordinates (longitude/latitude) to planar `(x, y)` values and performs the inverse transformation.
+
 - Exposes both a Python API (`compute_parameters`, `project`, `inverse_project`) and a command line interface for quick calculations.
 
 ## Quick start
@@ -13,6 +14,7 @@ Run the built-in example that mirrors the values in the experiment (φ1=15°, φ
 ```bash
 python main.py --example
 ```
+
 
 Project custom coordinates with your own parameters:
 
@@ -23,6 +25,7 @@ python main.py \
   --central-meridian 110 \
   --coord 113,40 --coord 115,35
 ```
+
 
 You can also import the module to reuse the functions programmatically:
 

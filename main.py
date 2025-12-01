@@ -15,6 +15,7 @@ from __future__ import annotations
 import argparse
 import dataclasses
 import math
+
 from typing import Iterable, Tuple
 
 
@@ -176,6 +177,7 @@ def inverse_project(xy_pairs: Iterable[Tuple[float, float]], params: LambertPara
     return results
 
 
+
 def run_example():
     """Run an example mirroring the worked steps in the scanned notes."""
 
@@ -195,6 +197,7 @@ def run_example():
         print(f"Input lon/lat : ({lon:.4f}°, {lat:.4f}°)")
         print(f"Projected     : x={x:,.3f} m, y={y:,.3f} m")
         print(f"Inverse check : ({lon_inv:.4f}°, {lat_inv:.4f}°)\n")
+
 
 
 def _parse_pair(pair_str: str) -> Tuple[float, float]:
@@ -241,6 +244,7 @@ def main():  # pragma: no cover - exercised via CLI
         action="store_true",
         help="Run the built-in example that mirrors the textbook values.",
     )
+
     args = parser.parse_args()
 
     if args.example:
@@ -256,9 +260,6 @@ def main():  # pragma: no cover - exercised via CLI
     print(f"F = {params.F:.8f}")
     print(f"rho0 = {params.rho0:.3f} m")
     print()
-
-    for lon, lat, (x, y) in zip(coords, project(coords, params)):
-        print(f"(λ, φ) = ({lon}°, {lat}°) -> (x, y) = ({x:.3f}, {y:.3f}) m")
 
 
 if __name__ == "__main__":  # pragma: no cover
