@@ -1,0 +1,13 @@
+<svg xmlns='http://www.w3.org/2000/svg' width='600' height='600' viewBox='0 0 600 600'>
+  <style>
+    .grid { stroke: #bbbbbb; stroke-dasharray: 4 4; stroke-width: 0.8; }
+    .axis { stroke: #000000; stroke-width: 1.2; }
+    text { fill: #000000; }
+  </style>
+  <rect x='0' y='0' width='600' height='600' fill='white' />
+  <!-- Gridlines -->
+  <line class='axis' x1='0' y1='300.00' x2='600' y2='300.00' />
+  <line class='axis' x1='300.00' y1='0' x2='300.00' y2='600' />
+  <circle cx="300.00" cy="300.00" r="4" fill="#4169e1" />
+  <text x="306.00" y="294.00" font-size="12" font-family="Arial">λ=113.0° φ=40.0°</text>
+</svg>
