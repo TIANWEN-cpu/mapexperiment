@@ -15,7 +15,7 @@ from __future__ import annotations
 import argparse
 import dataclasses
 import math
-from pathlib import Path
+
 from typing import Iterable, Tuple
 
 
@@ -177,63 +177,6 @@ def inverse_project(xy_pairs: Iterable[Tuple[float, float]], params: LambertPara
     return results
 
 
-def plot_projection(
-    lon_lat_deg: Iterable[Tuple[float, float]],
-    projected_xy: Iterable[Tuple[float, float]],
-    *,
-    output_path: Path,
-):
-    """Write a minimal SVG scatter plot of projected points."""
-
-    output_path = Path(output_path)
-    if output_path.suffix.lower() != ".svg":
-        output_path = output_path.with_suffix(".svg")
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-
-    xs, ys = zip(*projected_xy)
-    min_x, max_x = min(xs), max(xs)
-    min_y, max_y = min(ys), max(ys)
-    span_x = max(max_x - min_x, 1.0)
-    span_y = max(max_y - min_y, 1.0)
-    pad_x, pad_y = 0.1 * span_x, 0.1 * span_y
-
-    view_min_x, view_max_x = min_x - pad_x, max_x + pad_x
-    view_min_y, view_max_y = min_y - pad_y, max_y + pad_y
-
-    width, height = 600, 600
-
-    def to_svg_coords(x: float, y: float) -> Tuple[float, float]:
-        sx = (x - view_min_x) / (view_max_x - view_min_x) * width
-        # SVG y-axis is downward, so flip
-        sy = height - (y - view_min_y) / (view_max_y - view_min_y) * height
-        return sx, sy
-
-    circles = []
-    labels = []
-    for (lon, lat), (x, y) in zip(lon_lat_deg, projected_xy):
-        sx, sy = to_svg_coords(x, y)
-        circles.append(f'<circle cx="{sx:.2f}" cy="{sy:.2f}" r="4" fill="#4169e1" />')
-        label = f"λ={lon}° φ={lat}°"
-        labels.append(
-            f'<text x="{sx + 6:.2f}" y="{sy - 6:.2f}" font-size="12" font-family="Arial">{label}</text>'
-        )
-
-    svg = f"""<svg xmlns='http://www.w3.org/2000/svg' width='{width}' height='{height}' viewBox='0 0 {width} {height}'>
-  <style>
-    .grid {{ stroke: #bbbbbb; stroke-dasharray: 4 4; stroke-width: 0.8; }}
-    .axis {{ stroke: #000000; stroke-width: 1.2; }}
-    text {{ fill: #000000; }}
-  </style>
-  <rect x='0' y='0' width='{width}' height='{height}' fill='white' />
-  <!-- Gridlines -->
-  <line class='axis' x1='0' y1='{height/2:.2f}' x2='{width}' y2='{height/2:.2f}' />
-  <line class='axis' x1='{width/2:.2f}' y1='0' x2='{width/2:.2f}' y2='{height}' />
-  {' '.join(circles)}
-  {' '.join(labels)}
-</svg>"""
-
-    output_path.write_text(svg, encoding="utf-8")
-
 
 def run_example():
     """Run an example mirroring the worked steps in the scanned notes."""
@@ -255,7 +198,6 @@ def run_example():
         print(f"Projected     : x={x:,.3f} m, y={y:,.3f} m")
         print(f"Inverse check : ({lon_inv:.4f}°, {lat_inv:.4f}°)\n")
 
-    plot_projection(sample_lon_lat, projected, output_path=Path("example_lambert.svg"))
 
 
 def _parse_pair(pair_str: str) -> Tuple[float, float]:
@@ -302,16 +244,7 @@ def main():  # pragma: no cover - exercised via CLI
         action="store_true",
         help="Run the built-in example that mirrors the textbook values.",
     )
-    parser.add_argument(
-        "--no-plot",
-        action="store_true",
-        help="Skip plotting the projected points (plots are saved to disk by default).",
-    )
-    parser.add_argument(
-        "--plot-output",
-        default="lambert_plot.svg",
-        help="Filename for the generated plot (default: lambert_plot.svg)",
-    )
+
     args = parser.parse_args()
 
     if args.example:
@@ -327,15 +260,6 @@ def main():  # pragma: no cover - exercised via CLI
     print(f"F = {params.F:.8f}")
     print(f"rho0 = {params.rho0:.3f} m")
     print()
-
-    projected = project(coords, params)
-    for (lon, lat), (x, y) in zip(coords, projected):
-        print(f"(λ, φ) = ({lon}°, {lat}°) -> (x, y) = ({x:.3f}, {y:.3f}) m")
-
-    if not args.no_plot:
-        output_path = Path(args.plot_output)
-        plot_projection(coords, projected, output_path=output_path)
-        print(f"Plot saved to {output_path.resolve()}")
 
 
 if __name__ == "__main__":  # pragma: no cover

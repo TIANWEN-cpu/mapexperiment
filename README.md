@@ -5,7 +5,7 @@ This repository contains a small Python implementation of the Lambert conformal 
 ## Features
 - Computes the projection constants `n`, `F` (often called `K` in textbooks), and `ρ0` from two standard parallels, a latitude of origin, and a central meridian.
 - Projects geographic coordinates (longitude/latitude) to planar `(x, y)` values and performs the inverse transformation.
-- Saves a quick-look scatter plot of projected points so you can visualize the result immediately.
+
 - Exposes both a Python API (`compute_parameters`, `project`, `inverse_project`) and a command line interface for quick calculations.
 
 ## Quick start
@@ -15,7 +15,6 @@ Run the built-in example that mirrors the values in the experiment (φ1=15°, φ
 python main.py --example
 ```
 
-The example also writes `example_lambert.svg` to the repository directory with a basic scatter plot of the projected locations.
 
 Project custom coordinates with your own parameters:
 
@@ -27,12 +26,6 @@ python main.py \
   --coord 113,40 --coord 115,35
 ```
 
-By default the CLI saves a plot of the projected points to `lambert_plot.svg`. To disable plotting or customize the filename:
-
-```bash
-python main.py --coord 113,40 --no-plot
-python main.py --coord 113,40 --plot-output my_plot.svg
-```
 
 You can also import the module to reuse the functions programmatically:
 
